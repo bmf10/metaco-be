@@ -1,55 +1,55 @@
 {
-    "root": true,
-    "env": {
-        "es6": true,
-        "node": true
+  "root": true,
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": ["./tsconfig.json"],
+    "sourceType": "module"
+  },
+  "plugins": ["prefer-arrow", "import", "@typescript-eslint", "prettier"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:import/errors",
+    "plugin:import/typescript",
+    "prettier"
+  ],
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true
+      }
+    }
+  },
+  "rules": {
+    "no-console": "error",
+    "prefer-arrow/prefer-arrow-functions": ["error"],
+    "prettier/prettier": "error",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-unsafe-assignment": "off",
+    "@typescript-eslint/no-non-null-assertion": "off"
+  },
+  "overrides": [
+    {
+      "files": ["**/migrations/*"],
+      "rules": {
+        "@typescript-eslint/camelcase": "off"
+      }
     },
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "project": ["./tsconfig.json"],
-        "sourceType": "module"
-    },
-    "plugins": ["prefer-arrow", "import", "@typescript-eslint", "prettier"],
-    "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking",
-        "plugin:import/errors",
-        "plugin:import/typescript",
-        "prettier"
-    ],
-    "settings": {
-        "import/resolver": {
-            "typescript": {
-                "alwaysTryTypes": true
-            }
-        }
-    },
-    "rules": {
-        "no-console": "error",
-        "prefer-arrow/prefer-arrow-functions": ["error"],
-        "prettier/prettier": "error",
-        "@typescript-eslint/explicit-function-return-type": "off",
+    {
+      "files": ["*.js"],
+      "rules": {
+        "@typescript-eslint/no-var-requires": "off",
         "@typescript-eslint/no-unsafe-assignment": "off",
-        "@typescript-eslint/no-non-null-assertion": "off"
-    },
-    "overrides": [
-        {
-            "files": ["**/migrations/*"],
-            "rules": {
-                "@typescript-eslint/camelcase": "off"
-            }
-        },
-        {
-            "files": ["*.js"],
-            "rules": {
-                "@typescript-eslint/no-var-requires": "off",
-                "@typescript-eslint/no-unsafe-assignment": "off",
-                "@typescript-eslint/no-unsafe-member-access": "off",
-                "@typescript-eslint/no-unsafe-return": "off",
-                "@typescript-eslint/no-unsafe-call": "off"
-            }
-        }
-    ]
+        "@typescript-eslint/no-unsafe-member-access": "off",
+        "@typescript-eslint/no-unsafe-return": "off",
+        "@typescript-eslint/no-unsafe-call": "off"
+      }
+    }
+  ]
 }
