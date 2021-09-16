@@ -30,7 +30,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.ENUM('CAPTAIN', 'MEMBER', 'STANDIN'),
       },
-      inGameId: {
+      ingameId: {
         allowNull: false,
         type: Sequelize.INTEGER,
       },
