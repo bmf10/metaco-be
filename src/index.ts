@@ -7,5 +7,6 @@ const PORT = parseInt(process.env.PORT || '5000')
 app.get('/ping', (req, res) => res.send('pong'))
 
 app.listen(PORT, () => {
-    console.log(`listening at port ${PORT}`)
+  // eslint-disable-next-line no-console
+  console.log(`listening at port ${PORT}`)
 })
