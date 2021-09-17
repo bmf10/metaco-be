@@ -24,7 +24,6 @@ module.exports = {
         onDelete: 'RESTRICT',
       },
       logo: {
-        allowNull: false,
         type: Sequelize.STRING,
       },
       tournamentId: {

@@ -21,9 +21,11 @@ module.exports = {
       },
       position: {
         type: Sequelize.INTEGER,
+        allowNull: false,
       },
       point: {
         type: Sequelize.INTEGER,
+        allowNull: false,
       },
       tournamentId: {
         allowNull: false,
