@@ -1,7 +1,7 @@
-import type { DefineFunction } from 'model-types'
+import type { AssociateFunction, Db, DefineFunction } from '../model-type'
 import { Model } from 'sequelize'
-import { Team, TeamEntity } from './team'
-import { TeamMember, TeamMemberEntity } from './teamMember'
+import type { Team, TeamEntity } from './team'
+import type { TeamMember, TeamMemberEntity } from './teamMember'
 
 export interface UserEntity {
   readonly id: number
@@ -14,7 +14,8 @@ export interface UserEntity {
 }
 
 export class User extends Model implements UserEntity {
-  static readonly association = (): void => {
+  static readonly associate: AssociateFunction = ({ models }: Db) => {
+    const { Team, TeamMember } = models
     User.hasMany(Team, {
       foreignKey: 'captainId',
       as: 'captains',
@@ -38,6 +39,8 @@ export class User extends Model implements UserEntity {
   readonly teamMembers?: ReadonlyArray<TeamMember>
 }
 
+export type UserModel = typeof User
+
 const define: DefineFunction = (sequelize, DataTypes) => {
   User.init(
     {
@@ -50,7 +53,6 @@ const define: DefineFunction = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
       },
       coin: {
-        allowNull: false,
         type: DataTypes.INTEGER,
         defaultValue: 0,
       },
@@ -60,6 +62,7 @@ const define: DefineFunction = (sequelize, DataTypes) => {
     },
     { sequelize, modelName: 'User', tableName: 'users' }
   )
+  return User
 }
 
 export default define

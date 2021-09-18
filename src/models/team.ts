@@ -1,8 +1,8 @@
-import type { DefineFunction } from 'model-types'
+import type { AssociateFunction, Db, DefineFunction } from '../model-type'
 import { Model } from 'sequelize'
-import { TeamMember } from './teamMember'
-import { Tournament, TournamentEntity } from './tournament'
-import { User, UserEntity } from './user'
+import type { TeamMember, TeamMemberEntity } from './teamMember'
+import type { Tournament, TournamentEntity } from './tournament'
+import type { User, UserEntity } from './user'
 
 export interface TeamEntity {
   readonly id: number
@@ -10,10 +10,12 @@ export interface TeamEntity {
   readonly logo?: string
   readonly captain?: UserEntity
   readonly tournament?: TournamentEntity
+  readonly teamMember?: ReadonlyArray<TeamMemberEntity>
 }
 
 export class Team extends Model implements TeamEntity {
-  static readonly association = (): void => {
+  static readonly associate: AssociateFunction = ({ models }: Db): void => {
+    const { User, Tournament, TeamMember } = models
     Team.belongsTo(User, {
       foreignKey: 'captainId',
       as: 'captain',
@@ -39,7 +41,10 @@ export class Team extends Model implements TeamEntity {
   readonly logo?: string
   readonly captain?: User
   readonly tournament?: Tournament
+  readonly teamMember?: ReadonlyArray<TeamMember>
 }
+
+export type TeamModel = typeof Team
 
 const define: DefineFunction = (sequelize, DataTypes) => {
   Team.init(
@@ -54,6 +59,7 @@ const define: DefineFunction = (sequelize, DataTypes) => {
     },
     { sequelize, modelName: 'Team', tableName: 'teams' }
   )
+  return Team
 }
 
 export default define

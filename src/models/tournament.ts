@@ -1,6 +1,6 @@
-import type { DefineFunction } from 'model-types'
+import type { AssociateFunction, Db, DefineFunction } from '../model-type'
 import { Model } from 'sequelize'
-import { Team, TeamEntity } from './team'
+import type { Team, TeamEntity } from './team'
 
 export interface TournamentEntity {
   readonly id: number
@@ -13,7 +13,8 @@ export interface TournamentEntity {
 }
 
 export class Tournament extends Model implements TournamentEntity {
-  static readonly association = (): void => {
+  static readonly associate: AssociateFunction = ({ models }: Db) => {
+    const { Team } = models
     Tournament.hasMany(Team, {
       foreignKey: 'captainId',
       as: 'teams',
@@ -30,6 +31,8 @@ export class Tournament extends Model implements TournamentEntity {
   readonly slot?: string
   readonly teams?: ReadonlyArray<Team>
 }
+
+export type TournamentModel = typeof Tournament
 
 const define: DefineFunction = (sequelize, DataTypes) => {
   Tournament.init(
@@ -56,6 +59,7 @@ const define: DefineFunction = (sequelize, DataTypes) => {
     },
     { sequelize, modelName: 'Tournament', tableName: 'tournaments' }
   )
+  return Tournament
 }
 
 export default define

@@ -4,7 +4,8 @@ import type {
   ConfigMap,
   Db,
   DefineFunction,
-} from 'model-types'
+  ModelMap,
+} from '../model-type'
 import path from 'path'
 import Database, { Sequelize } from 'sequelize'
 
@@ -42,7 +43,7 @@ const models = fs
   }, {})
 
 const db: Db = {
-  models,
+  models: models as unknown as ModelMap,
   sequelize,
   Sequelize: Database,
 }
