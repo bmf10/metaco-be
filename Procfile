@@ -1,1 +1,1 @@
-web: npm run start
+web: node -r ./tsconfig-paths build/index.js
