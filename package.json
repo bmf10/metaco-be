@@ -13,6 +13,9 @@
     "postinstall": "npm run build",
     "start": "node -r ./tsconfig-paths build/index.js"
   },
+  "engines": {
+    "node": "16.x"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
