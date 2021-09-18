@@ -1,6 +1,6 @@
 import express, { json, urlencoded } from 'express'
-import db from 'models'
-import service from 'services'
+import db from './models'
+import service from './services'
 
 const app = express()
 

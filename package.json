@@ -9,9 +9,9 @@
     "migrate:reset": "sequelize db:migrate:undo:all",
     "seed": "sequelize db:seed:all",
     "seed:reset": "sequelize db:seed:undo:all",
-    "build": "tsc",
+    "build": "tsc -p tsconfig.json",
     "postinstall": "npm run build",
-    "start": "node build/index.js"
+    "start": "node -r ./tsconfig-paths build/index.js"
   },
   "keywords": [],
   "author": "",
