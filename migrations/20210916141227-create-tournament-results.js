@@ -5,7 +5,7 @@
 /** @type {Migration} */
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('team_members', {
+    return queryInterface.createTable('tournament_results', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -48,6 +48,6 @@ module.exports = {
   },
 
   down: (queryInterface) => {
-    return queryInterface.dropTable('team_members')
+    return queryInterface.dropTable('tournament_results')
   },
 }

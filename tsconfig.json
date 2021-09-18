@@ -15,7 +15,9 @@
     "baseUrl": "./src",
     "paths": {
       "models/*": ["models/*", "models/*/index"],
-      "services/*": ["services/*", "services/*/index"]
+      "services/*": ["services/*", "services/*/index"],
+      "utils/*": ["utils/*", "utils/*/index"],
+      "middleware/*": ["middleware/*", "middleware/*/index"]
     },
     "outDir": "build"
   }
