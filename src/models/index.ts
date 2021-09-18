@@ -19,7 +19,7 @@ const config = configMap[env]
 
 const sequelize = new Sequelize({
   dialect: 'sqlite',
-  storage: '../../database/development.sqlite',
+  storage: config.storage,
 })
 
 const ext = /\.(ts|js)$/
