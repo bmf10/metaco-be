@@ -5,8 +5,9 @@ import type { Tournament, TournamentEntity } from './tournament'
 
 export interface TournamentResultEntity {
   readonly id: number
-  readonly position: string
+  readonly position: number
   readonly point: string
+  readonly teamId: number
   readonly tournament?: TournamentEntity
   readonly team?: TeamEntity
 }
@@ -28,8 +29,9 @@ export class TournamentResult extends Model implements TournamentResultEntity {
     })
   }
   readonly id!: number
-  readonly position!: string
+  readonly position!: number
   readonly point!: string
+  readonly teamId!: number
   readonly tournament?: Tournament
   readonly team?: Team
 }

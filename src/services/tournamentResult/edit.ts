@@ -1,6 +1,10 @@
 import { RequestHandler, Router } from 'express'
 import { Joi, schema, validate } from 'express-validation'
+import db from 'models'
+import { TeamMember } from 'models/teamMember'
 import { TournamentResult } from 'models/tournamentResult'
+import { User } from 'models/user'
+import generateAward from 'utils/generateAward'
 
 interface Params {
   readonly teamId?: number
@@ -16,37 +20,56 @@ const validationSchema: schema = {
   }),
 }
 
-const generatePoint = (position: number): number => {
-  switch (position) {
-    case 1:
-      return 5
-    case 2:
-      return 3
-    case 3:
-      return 2
-    default:
-      return 0
-  }
-}
-
-const requestHandler: RequestHandler = async (req, res) => {
+const requestHandler: RequestHandler = async (req, res, next) => {
   const { id } = req.params
   const body = req.body as Params
+  const transaction = await db.sequelize.transaction()
 
-  const tournament = await TournamentResult.findByPk(id)
+  try {
+    const tournament = await TournamentResult.findByPk(id, { transaction })
 
-  if (!tournament) {
-    return res.sendStatus(404)
+    if (!tournament) {
+      return res.sendStatus(404)
+    }
+
+    if (body.position) {
+      const teamMember = await TeamMember.findAll({
+        attributes: ['id', 'userId'],
+        where: { teamId: tournament.teamId },
+        include: [
+          {
+            association: 'user',
+          },
+        ],
+        transaction,
+      })
+
+      const oldAward = generateAward(tournament.position)
+      const newAward = generateAward(body.position)
+
+      await Promise.all(
+        teamMember.map(({ user }) =>
+          User.update(
+            { coin: user.coin - oldAward + newAward },
+            { where: { id: user.id }, transaction }
+          )
+        )
+      )
+    }
+
+    await tournament
+      .set({
+        ...body,
+        ...(body.position ? { point: generateAward(body.position) } : {}),
+      })
+      .save({ transaction })
+
+    await transaction.commit()
+    res.json(tournament.toJSON())
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
   }
-
-  await tournament
-    .set({
-      ...body,
-      ...(body.position ? { point: generatePoint(body.position) } : {}),
-    })
-    .save()
-
-  res.json(tournament.toJSON())
 }
 
 const router = Router()

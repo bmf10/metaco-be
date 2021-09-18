@@ -1,6 +1,10 @@
 import { RequestHandler, Router } from 'express'
 import { Joi, schema, validate } from 'express-validation'
+import db from 'models'
+import { TeamMember } from 'models/teamMember'
 import { TournamentResult } from 'models/tournamentResult'
+import { User } from 'models/user'
+import generateAward from 'utils/generateAward'
 
 interface Params {
   readonly teamId: number
@@ -16,27 +20,45 @@ const validationSchema: schema = {
   }),
 }
 
-const generatePoint = (position: number): number => {
-  switch (position) {
-    case 1:
-      return 5
-    case 2:
-      return 3
-    case 3:
-      return 2
-    default:
-      return 0
-  }
-}
-
-const requestHandler: RequestHandler = async (req, res) => {
+const requestHandler: RequestHandler = async (req, res, next) => {
   const body = req.body as Params
-  const tournament = await TournamentResult.create({
-    ...body,
-    point: generatePoint(body.position),
-  })
+  const transaction = await db.sequelize.transaction()
+  const award = generateAward(body.position)
+  try {
+    const tournament = await TournamentResult.create(
+      {
+        ...body,
+        point: award,
+      },
+      { transaction }
+    )
 
-  res.json(tournament.toJSON())
+    const teamMember = await TeamMember.findAll({
+      attributes: ['id', 'userId'],
+      where: { teamId: body.teamId },
+      include: [
+        {
+          association: 'user',
+        },
+      ],
+      transaction,
+    })
+
+    await Promise.all(
+      teamMember.map(({ user }) => {
+        return User.update(
+          { coin: user.coin + award },
+          { where: { id: user.id }, transaction }
+        )
+      })
+    )
+
+    await transaction.commit()
+    res.json(tournament.toJSON())
+  } catch (error) {
+    await transaction.rollback()
+    next(error)
+  }
 }
 
 const router = Router()
