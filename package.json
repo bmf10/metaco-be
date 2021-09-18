@@ -11,7 +11,7 @@
     "seed:reset": "sequelize db:seed:undo:all",
     "build": "tsc -p tsconfig.json",
     "postinstall": "npm run build",
-    "start": "node -r ./tsconfig-paths build/index.js"
+    "start": "node -r tsconfig-paths build/index.js"
   },
   "engines": {
     "node": "16.x"
