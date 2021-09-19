@@ -27,6 +27,10 @@ const requestHandler: RequestHandler = async (req, res) => {
         association: 'team',
         attributes: ['id', 'name', 'logo'],
       },
+      {
+        association: 'tournament',
+        attributes: ['id', 'title'],
+      },
     ],
   })
 
